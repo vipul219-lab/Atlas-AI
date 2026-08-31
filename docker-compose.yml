@@ -1,0 +1,35 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: atlas-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - atlas_mongo_data:/data/db
+
+  backend:
+    build: .
+    container_name: atlas-backend
+    ports:
+      - "9000:9000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB_NAME: atlas_db
+      MODEL_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      VLLM_BASE_URL: http://host.docker.internal:8000/v1
+      FLUX_BASE_URL: http://host.docker.internal:8010
+      VIDEO_BASE_URL: http://host.docker.internal:8020
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./atlas-ui
+    container_name: atlas-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  atlas_mongo_data:

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+env/
+.env
+uploads/
+
+atlas-ui/node_modules/
+atlas-ui/dist/
+
+.DS_Store
