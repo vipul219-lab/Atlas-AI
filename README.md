@@ -112,11 +112,7 @@ MongoDB starts automatically in Docker. Its data is kept in the `atlas_mongo_dat
 
 ## Run Directly With Ollama
 
-Use this when you do not want Docker for the application. MongoDB must still be running:
-
-```bash
-docker compose up mongo
-```
+Use this when you do not want Docker. MongoDB is optional: if it is unavailable, Atlas uses temporary in-memory accounts and chat history that reset when the backend restarts.
 
 Terminal 1:
 
@@ -128,7 +124,6 @@ ollama pull qwen3:4b
 Terminal 2:
 
 ```bash
-export MODEL_PROVIDER=ollama
 uvicorn app.main:app --reload --port 9000
 ```
 

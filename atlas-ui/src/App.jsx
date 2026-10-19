@@ -39,9 +39,7 @@ export default function App() {
       const response = await fetch(`${API_URL}/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(loginForm) });
       const data = await readResponse(response);
       setToken(data.access_token); setUser({ username: loginForm.username, role: data.role });
-      const historyResponse = await fetch(`${API_URL}/chat/history`, { headers: { token: `Bearer ${data.access_token}` } });
-      const historyData = await historyResponse.json().catch(() => ({}));
-      if (historyResponse.ok) setHistory((historyData.history || []).map((item) => ({ mode: item.mode, user: item.user_message, assistant: item.answer })));
+      setHistory([]);
       setNotice("Welcome to Atlas");
     } catch (err) { setError(err.message); }
   }
@@ -89,7 +87,7 @@ export default function App() {
       <div className="user-strip"><div className="avatar">{user.username[0].toUpperCase()}</div><div><strong>{user.username}</strong><span>{user.role}</span></div></div>
       <button className="about-button" onClick={() => setAboutOpen(!aboutOpen)}><Info size={17} /> About Atlas</button>
       <p className="section-label">WORKSPACE</p>
-      <nav className="mode-list">{modes.map((item) => { const Icon = item.icon; return <button key={item.id} className={mode === item.id && !aboutOpen ? "active" : ""} onClick={() => { setMode(item.id); setAboutOpen(false); }}><Icon size={18} /><span><strong>{item.label}</strong><small>{item.description}</small></span></button>; })}</nav>
+      <nav className="mode-list">{modes.map((item) => { const Icon = item.icon; return <button key={item.id} className={mode === item.id && !aboutOpen ? "active" : ""} onClick={() => { setMode(item.id); setAboutOpen(false); if (item.id === "chat") setHistory([]); }}><Icon size={18} /><span><strong>{item.label}</strong><small>{item.description}</small></span></button>; })}</nav>
       {user.role === "admin" && <form className="admin-box" onSubmit={createUser}><p className="section-label">ADMIN</p><h2><UserPlus size={16} /> Create account</h2><input placeholder="Username" value={newUser.username} onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} /><input placeholder="Password" type="password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} /><select value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}><option value="user">User</option><option value="admin">Admin</option></select><button className="secondary-button" type="submit">Create account</button></form>}
       <button className="logout-button" onClick={logout}><LogOut size={16} /> Sign out</button>
     </aside>

@@ -3,7 +3,7 @@ import os
 from fastapi import HTTPException
 import httpx
 
-MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "vllm")
+MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "ollama").strip().lower()
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 
